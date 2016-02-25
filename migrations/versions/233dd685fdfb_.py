@@ -12,6 +12,7 @@ down_revision = None
 
 from alembic import op
 import sqlalchemy as sa
+import sqlalchemy_utils
 
 
 def upgrade():
@@ -19,7 +20,7 @@ def upgrade():
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=True),
-    sa.Column('password', sqlalchemy_utils.types.password.PasswordType(length=1137), nullable=True),
+    sa.Column('password', sqlalchemy_utils.types.password.PasswordType(), nullable=True),
     sa.Column('token', sa.String(length=512), nullable=True),
     sa.Column('token_expiration', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),

@@ -4,8 +4,8 @@ from sqlalchemy_utils import PasswordType
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(PasswordType(schemes=['pbkdf2_sha512']))
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(PasswordType(schemes=['pbkdf2_sha512']), nullable=False)
     token = db.Column(db.String(512))
     token_expiration = db.Column(db.DateTime)
 
