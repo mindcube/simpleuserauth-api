@@ -4,7 +4,12 @@ from flask import Flask
 from flask import url_for
 from flask import request
 
+import os
+
 app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
+
+print(os.environ['APP_SETTINGS'])
 
 
 @app.route('/')
