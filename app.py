@@ -93,7 +93,7 @@ def register():
             return jsonify({'message': 'There was an error'}), 500
 
 
-@app.route('/api/token')
+@app.route('/api/user/login')
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token()

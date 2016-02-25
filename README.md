@@ -7,6 +7,12 @@ You can access and play around with the API at <https://simpleuserauth-api.herok
 
 Personal note: I've been wanting to explore building a basic API without the help of a REST framework and so used this as an opportunity to do just that.  Flask is an extremely lightweight application framework and it made the most sense to use it.
 
+Architecture
+------------
+
+This is an example of a simple, stateless token based user authentication API.  When a user creates an account, once they login they are provided with an authorization token that has a built in expiration date.  The user would then use this token to authenticate against protected resources. Once their token expires they will have to login again.
+
+
 Local Development
 -----------------
 
@@ -54,12 +60,14 @@ API Documentation
     - The password is hashed before it is stored in the database. Once hashed, the original password is discarded.
     - In a production deployment secure HTTP must be used to protect the password in transit.
 
-- GET **/api/token**
+- GET **/api/user/login**
 
     Return an authentication token.<br>
     This request must be authenticated using a HTTP Basic Authentication header.<br>
     On success a JSON object is returned with a field `token` set to the authentication token.
     On failure status code 401 (unauthorized) is returned.
+
+    The user would then use this token to authenticate for protected resources.
 
 - GET **/api/user**
 
