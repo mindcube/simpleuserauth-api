@@ -50,8 +50,11 @@ def api_user():
         })
 
     elif request.method == 'PATCH':
-        name = request.json.get('name')
-        password = request.json.get('password')
+        if not request.json:
+            return jsonify({'message': 'Please set your mimetype as application/json'}), 415
+
+        name = request.json.get('name', False)
+        password = request.json.get('password', False)
 
         if name or password:
             user = User.query.filter_by(email=g.user.email).first()
@@ -75,22 +78,30 @@ def api_user():
 
 @app.route('/api/user/register', methods=['POST'])
 def register():
-    email = request.json.get('email')
-    password = request.json.get('password')
-    name = request.json.get('name')
+    if not request.json:
+        return jsonify({'message': 'Please set your mimetype as application/json'}), 415
+
+    email = request.json.get('email', False)
+    password = request.json.get('password', False)
+    name = request.json.get('name', '')
 
     if not email:
         return jsonify({'message': 'Email required'}), 400
+
     elif not password:
         return jsonify({'message': 'Password required'}), 400
+
     else:
+        if User.query.filter_by(email=email).first():
+            return jsonify({'message': 'User already exists'}), 400
+
         try:
             user = User(email=email, password=password, name=name)
             db.session.add(user)
             db.session.commit()
             return jsonify({'message': 'User created successfully'}), 201
-        except Exception:
-            return jsonify({'message': 'There was an error'}), 500
+        except Exception as e:
+            return jsonify({'message': 'There was an error',}), 500
 
 
 @app.route('/api/user/login')

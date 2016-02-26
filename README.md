@@ -41,6 +41,11 @@ To run the local development server:
 API Documentation
 -----------------
 
+All requests need to be sent as a json payload.  The following needs to be set in your
+header:
+
+    Content-Type: application/json
+
 - POST **/api/user/register**
 
     Registers a new user.
@@ -49,16 +54,27 @@ API Documentation
 
     ```
     {
-        "email": <email address>,
-        "password": <password>,
-        "name": <name>
+        "email": "email@domain.com",
+        "password": "password",
+        "name": "Full name"
     }
     ```
     The _name_ parameter is optional.
 
+
     Notes:
     - The password is hashed before it is stored in the database. Once hashed, the original password is discarded.
     - In a production deployment secure HTTP must be used to protect the password in transit.
+
+    CURL:
+
+    ```
+    curl -X POST -H "Content-Type: application/json" -d '{
+        "email": "email@domain.com",
+        "password": "password",
+        "name": "Full name"
+    }' "https://simpleuserauth-api.herokuapp.com/api/user/register"
+    ```
 
 - GET **/api/user/login**
 
@@ -69,12 +85,23 @@ API Documentation
 
     The user would then use this token to authenticate for protected resources.
 
+    CURL:
+
+    ```
+    curl -X GET -H "Content-Type: application/json" --user email:password "https://simpleuserauth-api.herokuapp.com/api/user/login"
+    ```
+
 - GET **/api/user**
 
     This endpoint returns a json object with the email and name of the authenticated user.<br>
     This request must be authenticated using a HTTP Basic Authentication header. Instead of username and password, the client can provide a valid authentication token in the username field. If using an authentication token the password field is not used and can be set to any value.<br>
     On success a JSON object with data for the authenticated user is returned.<br>
     On failure status code 401 (unauthorized) is returned.
+
+    CURL:
+    ```
+    curl -X GET -H "Content-Type: application/json" -H "Authorization: Basic <authorization token>" "https://simpleuserauth-api.herokuapp.com/api/user"
+    ```
 
 - PATCH **/api/user**
 
@@ -86,13 +113,22 @@ API Documentation
 
     ```
     {
-        "name": <name>
-        "password": <password>,
+        "name": "Full name"
+        "password": "password",
     }
     ```
     This request must be authenticated using a HTTP Basic Authentication header. Instead of username and password, the client can provide a valid authentication token in the username field. If using an authentication token the password field is not used and can be set to any value.<br>
     On success status code 200 (OK) is returned.<br>
     On failure status code 401 (unauthorized) is returned.
+
+    CURL:
+
+    ```
+    curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Basic <authorization token>" -d '{
+        "name": "new name",
+        "password: "new password"
+    }' "https://simpleuserauth-api.herokuapp.com/api/user"
+    ```
 
 - DELETE **/api/user**
 
@@ -101,3 +137,8 @@ API Documentation
     On success status code 200 (OK) is returned.<br>
     On failure status code 401 (unauthorized) is returned.
 
+    CURL:
+
+    ```
+    curl -X DELETE -H "Content-Type: application/json" -H "Authorization: Basic <authorization token>" "https://simpleuserauth-api.herokuapp.com/api/user"
+    ```
